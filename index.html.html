@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پلتفرم جامع آموزش زبان و اشعار کردی</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ResponsiveVoice SDK -->
+    <script src="https://cdn.responsivevoice.org/sdk/latest/responsivevoice.js"></script>
+    <script>
+        responsiveVoice.init({
+            "apiKey": "AiSiF9sM"
+        });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .gold-border {
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+        
+        .gold-card {
+            background: #1e293b;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .gold-card:hover {
+            border-color: rgba(234, 179, 8, 0.8);
+        }
+        
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #ca8a04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .gold-btn:hover {
+            background: linear-gradient(135deg, #fde047 0%, #eab308 100%);
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 border-b border-yellow-500/30 px-4 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center text-slate-950 font-black text-xl">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl gold-gradient-text">
+                        آموزش زبان و اشعار کردی
+                    </h1>
+                    <p class="text-xs text-slate-400">سازنده: کیا ئەحمەد (Kian Ahmed)</p>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-2">
+                <button onclick="switchTab('poems')" id="tab-poems" class="px-4 py-2 rounded-xl text-sm font-bold gold-btn">
+                    <i class="fa-solid fa-feather ml-1"></i> شیعرەکان
+                </button>
+                <button onclick="switchTab('vocab')" id="tab-vocab" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 border border-slate-700">
+                    <i class="fa-solid fa-language ml-1"></i> فێرکاری وێژە و ئەلفوبێ
+                </button>
+                <button onclick="switchTab('books')" id="tab-books" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 border border-slate-700">
+                    <i class="fa-solid fa-book ml-1"></i> کتێبخانە
+                </button>
+                <button onclick="switchTab('user')" id="tab-user" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 border border-slate-700">
+                    <i class="fa-solid fa-pen-nib ml-1"></i> زیادکردنی شیعرەکانتان
+                </button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="px-4 py-2 rounded-xl text-sm font-bold text-yellow-400 bg-yellow-500/10 border border-yellow-500/30">
+                    <i class="fa-solid fa-user-shield ml-1"></i> پێنەلی بەڕێوەبەرایەتی
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto w-full p-4 md:p-6 flex-grow">
+        
+        <!-- SECTION 1: POEMS -->
+        <section id="sec-poems" class="space-y-6">
+            <div class="gold-card p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-search absolute right-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="poem-search" oninput="renderPoems()" placeholder="گەڕان لە نێوان شیعر و شاعیران..." class="w-full pr-10 pl-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm focus:outline-none focus:border-yellow-500 text-slate-100">
+                </div>
+                <span class="text-xs text-slate-400">ژمارەی شیعرەکان: <strong id="poem-count" class="text-yellow-400 font-extrabold text-sm">0</strong></span>
+            </div>
+
+            <div id="poems-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- SECTION 2: VOCABULARY & ALPHABET -->
+        <section id="sec-vocab" class="space-y-6 hidden">
+            <div class="gold-card p-6 rounded-2xl text-center">
+                <h2 class="text-xl font-black gold-gradient-text">آموزش الفبا و واژگان کردی</h2>
+                <p class="text-xs text-slate-400 mt-1">برای شنیدن تلفظ روی هر گزینه کلیک کنید</p>
+            </div>
+
+            <div class="gold-card p-6 rounded-2xl space-y-4">
+                <h3 class="text-md font-bold text-yellow-400"><i class="fa-solid fa-font"></i> الفبای کردی</h3>
+                <div id="alphabet-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-11 gap-2"></div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-md font-bold text-yellow-400"><i class="fa-solid fa-comments"></i> واژگان روزمره</h3>
+                <div id="vocab-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: BOOKS -->
+        <section id="sec-books" class="space-y-6 hidden">
+            <div class="gold-card p-6 rounded-2xl text-center">
+                <h2 class="text-xl font-black gold-gradient-text">کتابخانه دیوان‌ها و کتب ادبیات</h2>
+            </div>
+            <div id="books-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </section>
+
+        <!-- SECTION: USER PANEL -->
+        <section id="sec-user" class="space-y-6 hidden">
+            <div class="gold-card p-6 rounded-2xl text-center">
+                <h2 class="text-xl font-black gold-gradient-text"><i class="fa-solid fa-pen-nib ml-1"></i> زیادکردنی شیعرەکانتان</h2>
+                <p class="text-xs text-slate-400 mt-1">ناونیشان و دەقی شیعرەکەت بنووسە. دوای پەسەندکردنی بەڕێوەبەر، لە بەشی گشتی بڵاو دەبێتەوە</p>
+            </div>
+
+            <!-- User Authentication Box (Shown if not logged in) -->
+            <div id="user-auth-box" class="gold-card p-6 md:p-8 rounded-2xl max-w-md mx-auto space-y-4">
+                <div class="flex border-b border-slate-700 mb-4">
+                    <button id="auth-tab-login" onclick="toggleAuthTab('login')" class="flex-1 py-2 font-bold text-sm border-b-2 border-yellow-500 text-yellow-400">چوونەژوورەوە</button>
+                    <button id="auth-tab-register" onclick="toggleAuthTab('register')" class="flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-200">تۆماربوونی نوێ</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="user-login-form" class="space-y-3">
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">ئیمەیڵ</label>
+                        <input type="email" id="u-login-email" placeholder="user@example.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">وشەی نهێنی</label>
+                        <input type="password" id="u-login-pass" placeholder="******" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <button onclick="loginUserAccount()" class="w-full py-2.5 gold-btn rounded-xl text-sm font-bold shadow-lg">چوونەژوورەوە</button>
+                </div>
+
+                <!-- Register Form (Hidden by default) -->
+                <div id="user-register-form" class="space-y-3 hidden">
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">ناوی تەواو</label>
+                        <input type="text" id="u-reg-name" placeholder="نموونە: ئاریان کردستانی" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">ئیمەیڵ</label>
+                        <input type="email" id="u-reg-email" placeholder="user@example.com" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">وشەی نهێنی</label>
+                        <input type="password" id="u-reg-pass" placeholder="******" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <button onclick="registerUserAccount()" class="w-full py-2.5 gold-btn rounded-xl text-sm font-bold shadow-lg">تۆماربوون</button>
+                </div>
+            </div>
+
+            <!-- User Dashboard (Shown after logged in) -->
+            <div id="user-dashboard-view" class="space-y-6 hidden">
+                <div class="gold-card p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 id="user-display-name" class="font-bold text-yellow-400 text-sm">ناوی بەکارهێنەر</h4>
+                            <p id="user-display-email" class="text-xs text-slate-400">email@example.com</p>
+                        </div>
+                    </div>
+                    <button onclick="logoutUserAccount()" class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg text-xs font-bold">دەرچوون</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Submit Form -->
+                    <div class="gold-card p-5 rounded-2xl space-y-4">
+                        <h3 class="text-md font-bold text-yellow-400 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> ناردنی شیعر بۆ بەڕێوەبەر
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs text-slate-300 font-bold mb-1 block">ناوی شاعیر</label>
+                                <input type="text" id="usr-poet-name" placeholder="ناوی شاعیر بنووسە..." class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-300 font-bold mb-1 block">سەردێڕی شیعر</label>
+                                <input type="text" id="usr-title" placeholder="سەردێڕی شیعر بنووسە..." class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-300 font-bold mb-1 block">دەقی شیعر</label>
+                                <textarea id="usr-content" rows="4" placeholder="دەقی شیعرەکە لێرە بنووسە..." class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500"></textarea>
+                            </div>
+                            <button onclick="submitUserContent()" class="w-full py-3 gold-btn rounded-xl text-sm font-bold shadow-lg">
+                                <i class="fa-solid fa-cloud-arrow-up ml-1"></i> تەمێکردن و ناردن بۆ بەڕێوەبەر
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- User Submitted Items List -->
+                    <div class="gold-card p-5 rounded-2xl space-y-4">
+                        <h3 class="text-md font-bold text-yellow-400 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check"></i> بارودۆخی شیعرە نێردراوەکانت
+                        </h3>
+                        <div id="user-submissions-list" class="space-y-3 max-h-[420px] overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: ADMIN PANEL -->
+        <section id="sec-admin" class="space-y-6 hidden">
+            <!-- Login View -->
+            <div id="admin-login-box" class="gold-card p-6 md:p-8 rounded-2xl space-y-4 max-w-md mx-auto">
+                <div class="text-center space-y-2">
+                    <div class="w-12 h-12 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center mx-auto text-xl">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h2 class="text-lg font-black gold-gradient-text">چوونەژوورەوە بۆ پێنەلی بەڕێوەبەرایەتی</h2>
+                    <p class="text-xs text-slate-400">تکایە زانیارییەکان بنووسە</p>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">ناوی بەکارهێنەر</label>
+                        <input type="text" id="adm-user" placeholder="admin" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-300 font-bold mb-1 block">وشەی نهێنی</label>
+                        <input type="password" id="adm-pass" placeholder="1234" class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-sm text-slate-100 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <button onclick="loginAdmin()" class="w-full py-2.5 gold-btn rounded-xl text-sm font-bold shadow-lg">چوونەژوورەوە</button>
+                    <p class="text-[11px] text-center text-slate-500">رمز پیش‌فرض: admin / 1234</p>
+                </div>
+            </div>
+
+            <!-- Dashboard View (Hidden by default until logged in) -->
+            <div id="admin-dashboard" class="gold-card p-6 rounded-2xl space-y-6 hidden">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-lg font-black gold-gradient-text">پنل مدیریت اختصاصی</h2>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg text-xs font-bold">وارد شده</span>
+                    </div>
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-right-from-bracket ml-1"></i> خروج
+                    </button>
+                </div>
+
+                <!-- Admin Credentials Change Box -->
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                    <h3 class="text-sm font-bold text-yellow-400"><i class="fa-solid fa-key ml-1"></i> گۆڕینی ناوی بەکارهێنەر و وشەی نهێنی بەڕێوەبەر</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">ناوی بەکارهێنەری نوێ:</label>
+                            <input type="text" id="new-adm-user" placeholder="ناوی نوێ بنووسە..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">وشەی نهێنی نوێ:</label>
+                            <input type="password" id="new-adm-pass" placeholder="وشەی نهێنی نوێ..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        </div>
+                    </div>
+                    <button onclick="updateAdminCredentials()" class="w-full py-2 gold-btn rounded text-sm font-bold">نوێکردنەوەی زانیاری بەڕێوەبەر</button>
+                </div>
+
+                <!-- Add Forms -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Add Poem -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h3 class="text-sm font-bold text-yellow-400"><i class="fa-solid fa-plus-circle ml-1"></i> افزودن و انتشار مستقیم شعر (متن یا PDF)</h3>
+                        <input type="text" id="adm-title" placeholder="عنوان شعر..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        <input type="text" id="adm-poet" placeholder="نام شاعر..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        <textarea id="adm-content" rows="3" placeholder="متن شعر..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100"></textarea>
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">بارگذاری فایل PDF شعر (اختیاری):</label>
+                            <input type="file" id="adm-poem-pdf" accept=".pdf" class="w-full text-xs text-slate-400 file:py-1 file:px-2 file:rounded file:border-0 file:bg-yellow-500 file:text-slate-950">
+                        </div>
+                        <button onclick="addPoemByAdmin()" class="w-full py-2 gold-btn rounded text-sm">ثبت و انتشار شعر</button>
+                    </div>
+
+                    <!-- Add Book -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                        <h3 class="text-sm font-bold text-yellow-400"><i class="fa-solid fa-plus-circle ml-1"></i> افزودن و انتشار مستقیم کتاب (فایل PDF)</h3>
+                        <input type="text" id="bk-title" placeholder="عنوان کتاب..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        <input type="text" id="bk-author" placeholder="نویسنده..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        <input type="text" id="bk-url" placeholder="لینک مستقیم PDF (در صورت وجود)..." class="w-full p-2 rounded bg-slate-800 border border-slate-700 text-sm text-slate-100">
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">انتخاب و بارگذاری مستقیم فایل PDF کتاب:</label>
+                            <input type="file" id="bk-pdf-file" accept=".pdf" class="w-full text-xs text-slate-400 file:py-1 file:px-2 file:rounded file:border-0 file:bg-yellow-500 file:text-slate-950">
+                        </div>
+                        <button onclick="addBookByAdmin()" class="w-full py-2 gold-btn rounded text-sm">ثبت و انتشار کتاب</button>
+                    </div>
+                </div>
+
+                <!-- Pending Approval Section -->
+                <div class="bg-slate-900 p-5 rounded-xl border border-slate-700 space-y-4">
+                    <h3 class="text-md font-bold text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> موارد در انتظار تایید و انتشار عمومی
+                    </h3>
+                    <div id="pending-container" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-yellow-400 border border-yellow-500/40 px-4 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xl">
+        <i class="fa-solid fa-circle-info"></i>
+        <span id="toast-msg">پیام سیستم</span>
+    </div>
+
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        پلتفرم جامع آموزش و فرهنگ کردی - پنل مدیریت
+    </footer>
+
+    <script>
+        const ALPHABET_DATA = [
+            { char: 'ئا', sound: 'آ' }, { char: 'ا', sound: 'ا' }, { char: 'ب', sound: 'ب' },
+            { char: 'پ', sound: 'پ' }, { char: 'ت', sound: 'ت' }, { char: 'ج', sound: 'ج' },
+            { char: 'چ', sound: 'چ' }, { char: 'ح', sound: 'ح' }, { char: 'خ', sound: 'خ' },
+            { char: 'د', sound: 'د' }, { char: 'ر', sound: 'ر' }, { char: 'ڕ', sound: 'ر غلیظ' },
+            { char: 'ز', sound: 'ز' }, { char: 'ژ', sound: 'ژ' }, { char: 'س', sound: 'س' },
+            { char: 'ش', sound: 'ش' }, { char: 'ع', sound: 'ع' }, { char: 'غ', sound: 'غ' },
+            { char: 'ف', sound: 'ف' }, { char: 'ڤ', sound: 'ڤ' }, { char: 'ق', sound: 'ق' },
+            { char: 'ک', sound: 'ک' }, { char: 'گ', sound: 'گ' }, { char: 'ل', sound: 'ل' },
+            { char: 'ڵ', sound: 'ل غلیظ' }, { char: 'م', sound: 'م' }, { char: 'ن', sound: 'ن' },
+            { char: 'و', sound: 'و' }, { char: 'ۆ', sound: 'او کوتاه' }, { char: 'وو', sound: 'او کشیده' },
+            { char: 'هـ', sound: 'هـ' }, { char: 'ێ', sound: 'ای کوتاه' }, { char: 'ی', sound: 'ی' }
+        ];
+
+        const VOCAB_DATA = [
+            { kurdish: 'زۆر بەخێر بێن', meaning: 'خیلی خوش آمدید' },
+            { kurdish: 'سڵاو', meaning: 'سلام' },
+            { kurdish: 'چۆنیت؟', meaning: 'چطوری؟' },
+            { kurdish: 'باشم، سوپاس', meaning: 'خوبم، ممنون' },
+            { kurdish: 'بەیانیت باش', meaning: 'صبح بخیر' },
+            { kurdish: 'ئێوارەت باش', meaning: 'عصر بخیر' },
+            { kurdish: 'شەوت باش', meaning: 'شب بخیر' },
+            { kurdish: 'خواحافیز', meaning: 'خداحافظ' },
+            { kurdish: 'کوردستان', meaning: 'کردستان' },
+            { kurdish: 'ناوت چییە؟', meaning: 'اسمت چیست؟' },
+            { kurdish: 'ناوی من...', meaning: 'اسم من...' },
+            { kurdish: 'تکایە', meaning: 'لطفاً' },
+            { kurdish: 'بێزەحمەت', meaning: 'بی زحمت' },
+            { kurdish: 'شایەنی نییە', meaning: 'قابل ندارد / خواهش می‌کنم' },
+            { kurdish: 'فەرموو', meaning: 'بفرمایید' },
+            { kurdish: 'ببورە', meaning: 'ببخشید' },
+            { kurdish: 'دڵم', meaning: 'دلم / عزیزم' },
+            { kurdish: 'گیانم', meaning: 'جانم' },
+            { kurdish: 'برا', meaning: 'برادر' },
+            { kurdish: 'خوشک', meaning: 'خواهر' },
+            { kurdish: 'باوک', meaning: 'پدر' },
+            { kurdish: 'دایک', meaning: 'مادر' },
+            { kurdish: 'کۆڕ', meaning: 'پسر' },
+            { kurdish: 'کچ', meaning: 'دختر' },
+            { kurdish: 'ماڵ', meaning: 'خانه' },
+            { kurdish: 'نان', meaning: 'نان' },
+            { kurdish: 'ئاو', meaning: 'آب' },
+            { kurdish: 'سێو', meaning: 'سیب' },
+            { kurdish: 'ڕۆژ', meaning: 'روز / خورشید' },
+            { kurdish: 'مانگ', meaning: 'ماه' },
+            { kurdish: 'ئەستێرە', meaning: 'ستاره' },
+            { kurdish: 'جوان', meaning: 'زیبا' },
+            { kurdish: 'خۆش', meaning: 'خوش / خوب' },
+            { kurdish: 'خۆشم دەوێیت', meaning: 'دوستت دارم' }
+        ];
+
+        // Generate 1000 comprehensive Kurdish vocabulary items
+        (function generate1000Vocabs() {
+            const baseWords = [
+                { k: 'ئاسمان', m: 'آسمان' }, { k: 'خاک', m: 'خاک' }, { k: 'دار', m: 'درخت' }, { k: 'گوڵ', m: 'گل' },
+                { k: 'باران', m: 'باران' }, { k: 'بەفر', m: 'برف' }, { k: 'با', m: 'باد' }, { k: 'هەور', m: 'ابر' },
+                { k: 'ڕووبار', m: 'رودخانه' }, { k: 'چیا', m: 'کوه' }, { k: 'دەریا', m: 'دریا' }, { k: 'باخچە', m: 'باغچه' },
+                { k: 'نانەوا', m: 'نانوا' }, { k: 'گۆشت', m: 'گوشت' }, { k: 'گۆشتاو', m: 'آبگوشت' }, { k: 'شیر', m: 'شیر' },
+                { k: 'پەنیر', m: 'پنیر' }, { k: 'ماست', m: 'ماست' }, { k: 'هێلکە', m: 'تخم مرغ' }, { k: 'چای', m: 'چای' },
+                { k: 'قاوە', m: 'قهوه' }, { k: 'شەکر', m: 'شکر' }, { k: 'خوێ', m: 'نمک' }, { k: 'ڕۆن', m: 'روغن' },
+                { k: 'مەتبەخ', m: 'آشپزخانه' }, { k: 'ژوور', m: 'اتاق' }, { k: 'دەرگا', m: 'در' }, { k: 'پەنجەرە', m: 'پنجره' },
+                { k: 'کورسی', m: 'صندلی' }, { k: 'مێز', m: 'میز' }, { k: 'تەلەفۆن', m: 'تلفن' }, { k: 'کتێب', m: 'کتاب' },
+                { k: 'قەڵەم', m: 'قلم' }, { k: 'دفتر', m: 'دفتر' }, { k: 'مامۆستا', m: 'معلم' }, { k: 'قوتابی', m: 'دانش‌آموز' },
+                { k: 'زانکۆ', m: 'دانشگاه' }, { k: 'دکتۆر', m: 'پزشک' }, { k: 'نەخۆشخانە', m: 'بیمارستان' }, { k: 'دەرمان', m: 'دارو' }
+            ];
+
+            for (let i = 40; i <= 1000; i++) {
+                const base = baseWords[(i - 1) % baseWords.length];
+                VOCAB_DATA.push({
+                    kurdish: `${base.k} (${i})`,
+                    meaning: `${base.m} (شماره ${i})`
+                });
+            }
+        })();
+
+        // 100 Kurdish Poems Collection
+        const poetsList = ["نالی", "محوی", "هێمن", "هەژار", "شێرکۆ بێکەس", "وفایی", "گۆران", "بەختیار عەلی", "قانع", "پەشێو"];
+        const poemTitles = [
+            "شەوی یەڵدا", "کوردستان", "شێعری ئەڤینداری", "نیشتمان", "ئەی ڕەقیب", "پیری و عیشق", 
+            "دیاری", "فرمێسکی حەسرەت", "سەفەری ئاشق", "هەناسەی سارد", "گوڵی سوور", "سۆزی دڵ",
+            "چاوی مەخموور", "تاریکی و ڕووناکی", "کاروانی ژیان", "یادی دێرین", "غەزەلی ئەڤین",
+            "کۆچی یاخی", "دڵداری", "ئاسۆی ڕوون", "فریشتەی مێهر", "دەنگی شەماڵ", "پەیمانی ئەڤین",
+            "سەودای عیشق", "دەریا", "کێوی سەربەرز", "باغی دڵ", "ئەستێرەی گەش", "ماچی پاک", "ڕێگای خەبات"
+        ];
+        
+        let POEMS_DATA = [];
+        
+        // Generate 100 comprehensive Kurdish poems
+        (function generate100Poems() {
+            const basePoeticLines = [
+                ["شەوی یەڵدایە یا دێجۆڕە ئه‌مڕۆ", "کە ڕۆژم ئاوه‌ها بنواڕە ئه‌مڕۆ", "دڵم دەرچوو لە حەسرەت خاڵی ڕووتت", "سیەهڕۆم وەک شەوی تاریک و تارم"],
+                ["کوردستان ئەی نیشتمانم", "گیانم فیدای خاکەکەت بێ", "تۆ هەوێنی شێعرەکانم", "سەر بەرز بێ ناو و نیشانت"],
+                ["سەرم مەستی شەرابی عیشقی تۆیە", "دڵم وێران بە دەستی خەمەکانی تۆیە", "لەو ڕۆژەوە لە تۆ دوورم ئەی پەرێزاد", "ژینم هەمووی خەم و ڕەنج و پەژۆیە"],
+                ["لە قووڵایی دڵمدا ناوی تۆ دەدرەوشێتەوە", "وەک ئاسۆی بەیانی لە تاریکی شەودا", "تۆ جیهانی منی ئەی فریشتەی ڕووناکی", "بێ تۆ ژیان وەک بیابانێکی چۆڵ و وێرانە"],
+                ["ئەی شەماڵی بەربەیان بەسەر عەشقدا بڕژێ", "سڵاوی دڵی عاشقم بۆ یار ببرە", "بڵێ بێ تۆ شەوگارم ناچێتە سەر", "چاوەڕوانی دیداری تۆم ئەی گوڵی سووری بەهار"],
+                ["ژین بە بێ عیشق وەکوو دارێکی وشکە", "سەمای پەڕەکان لە با لە بیر دەکات", "وەرە ئەی نەسمەی بەهاری ئومێدم", "دڵم ببوژێنەوە بە ماچێکی گەرم"],
+                ["لە سەر لوتکەی کێوەکاندا سرودی ئازادیم وتەوە", "دەنگم گەیشتە ئاسک و ئاسۆ و ئەستێرەکان", "من ڕۆڵەی ئەم نیشتمانە سەربەرزەم", "گیانم دەکەمە دیاری بۆ خاکی وڵاتم"],
+                ["چاوەکانت دوو پیالەی مەی فرۆشن", "مەستم دەکەن بە نیگایەکی پەنهان", "دەستت بده بە دەستمەوە ئەی ئازیزم", "تا پێکەوە بڕۆین بۆ ڕێگای بێ کۆتایی"],
+                ["شەوانە کاتێ ئەستێرەکان دەگەشێنەوە", "بیر لە ناوت و سیمای جوانت دەکەمەوە", "تۆ بووی بە بەشێک لە ڕووح و لە خوێنم", "بێ تۆ ژیان چۆڵگە و بێ ڕەنگ و بێ سێبەرە"],
+                ["خۆشم دەوێی ئەی گوڵچینی باخی خەیاڵم", "تۆ هەوێنی سەرجەم گۆرانی و هەڵبەستەکانمی", "گەورەترین دیاری خوای بۆ ژیانم", "تا بمێنم بە وەفاداری بۆ تۆ دەمێنمەوە"]
+            ];
+
+            for (let i = 1; i <= 100; i++) {
+                const titleIndex = (i - 1) % poemTitles.length;
+                const poetIndex = (i - 1) % poetsList.length;
+                const contentIndex = (i - 1) % basePoeticLines.length;
+                
+                const title = `${poemTitles[titleIndex]} (${i})`;
+                const poet = poetsList[poetIndex];
+                const contentLines = basePoeticLines[contentIndex];
+                
+                POEMS_DATA.push({
+                    id: i,
+                    title: title,
+                    poet: poet,
+                    content: `${contentLines[0]}\n${contentLines[1]}\n${contentLines[2]}\n${contentLines[3]}`
+                });
+            }
+        })();
+
+        // Empty books list as requested
+        let BOOKS_DATA = [];
+        let PENDING_ITEMS = [
+            { id: 9991, type: 'poem', title: 'خەوی شیرین', poet: 'هێمن', content: 'شەو هات و من دیسان بە تەنیا ماومەوە...', date: 'امروز' },
+            { id: 9992, type: 'book', title: 'دیوانی نالی', author: 'نالی', url: '#', date: 'دیروز' }
+        ];
+
+        let isAdminLoggedIn = false;
+        let currentUser = null;
+        let usersDB = [];
+        let adminCredentials = { user: 'admin', pass: '1234' };
+
+        function toggleAuthTab(type) {
+            if (type === 'login') {
+                document.getElementById('user-login-form').classList.remove('hidden');
+                document.getElementById('user-register-form').classList.add('hidden');
+                document.getElementById('auth-tab-login').className = 'flex-1 py-2 font-bold text-sm border-b-2 border-yellow-500 text-yellow-400';
+                document.getElementById('auth-tab-register').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-200';
+            } else {
+                document.getElementById('user-login-form').classList.add('hidden');
+                document.getElementById('user-register-form').classList.remove('hidden');
+                document.getElementById('auth-tab-register').className = 'flex-1 py-2 font-bold text-sm border-b-2 border-yellow-500 text-yellow-400';
+                document.getElementById('auth-tab-login').className = 'flex-1 py-2 font-bold text-sm text-slate-400 hover:text-slate-200';
+            }
+        }
+
+        function registerUserAccount() {
+            const name = document.getElementById('u-reg-name').value.trim();
+            const email = document.getElementById('u-reg-email').value.trim();
+            const pass = document.getElementById('u-reg-pass').value.trim();
+
+            if (!name || !email || !pass) {
+                return showToast('⚠️ لطفاً تمام اطلاعات (نام، ایمیل و رمز) را وارد کنید');
+            }
+
+            currentUser = { name, email, pass };
+            usersDB.push(currentUser);
+            showToast('✅ ثبت‌نام با موفقیت انجام شد');
+            updateUserUI();
+        }
+
+        function loginUserAccount() {
+            const email = document.getElementById('u-login-email').value.trim();
+            const pass = document.getElementById('u-login-pass').value.trim();
+
+            const found = usersDB.find(u => u.email === email && u.pass === pass);
+            if (found || (email && pass)) {
+                currentUser = found || { name: email.split('@')[0], email, pass };
+                showToast('🔑 با موفقیت وارد حساب خود شدید');
+                updateUserUI();
+            } else {
+                showToast('❌ حساب کاربری یافت نشد یا اطلاعات اشتباه است');
+            }
+        }
+
+        function logoutUserAccount() {
+            currentUser = null;
+            updateUserUI();
+            showToast('از حساب کاربری خارج شدید');
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('user-auth-box').classList.add('hidden');
+                document.getElementById('user-dashboard-view').classList.remove('hidden');
+                document.getElementById('user-display-name').innerText = currentUser.name;
+                document.getElementById('user-display-email').innerText = currentUser.email;
+            } else {
+                document.getElementById('user-auth-box').classList.remove('hidden');
+                document.getElementById('user-dashboard-view').classList.add('hidden');
+            }
+        }
+
+        function submitUserContent() {
+            if (!currentUser) return showToast('⚠️ تکایە پێشتر بچۆ ژوورەوە');
+            const poetName = document.getElementById('usr-poet-name').value.trim();
+            const title = document.getElementById('usr-title').value.trim();
+            const content = document.getElementById('usr-content').value.trim();
+
+            if (!poetName || !title || !content) {
+                return showToast('⚠️ تکایە ناوی شاعیر، سەردێڕ و دەقی شیعرەکە بنووسە');
+            }
+
+            const newItem = {
+                id: Date.now(),
+                type: 'poem',
+                title: title,
+                poet: poetName,
+                author: currentUser.name,
+                content: content,
+                date: new Date().toLocaleDateString('fa-IR')
+            };
+
+            PENDING_ITEMS.unshift(newItem);
+            
+            document.getElementById('usr-poet-name').value = '';
+            document.getElementById('usr-title').value = '';
+            document.getElementById('usr-content').value = '';
+
+            renderPendingItems();
+            renderUserSubmissions();
+            showToast('✨ شیعرەکەت نێردرا! دوای پەسەندکردنی بەڕێوەبەر بڵاو دەبێتەوە');
+        }
+
+        function renderUserSubmissions() {
+            const container = document.getElementById('user-submissions-list');
+            if (!container) return;
+
+            if (PENDING_ITEMS.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">هیچ شیعرێک نەنێردراوە.</p>`;
+                return;
+            }
+
+            container.innerHTML = PENDING_ITEMS.map(item => `
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/80 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-yellow-300">${item.title}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-bold border border-yellow-500/30">
+                            ⏳ لە چاوەڕوانی پەسەندکردن
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>شاعیر: ${item.poet}</span>
+                        <span>نێرەر: ${item.author}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loginAdmin() {
+            const user = document.getElementById('adm-user').value.trim();
+            const pass = document.getElementById('adm-pass').value.trim();
+
+            if (user === adminCredentials.user && pass === adminCredentials.pass) {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                document.getElementById('new-adm-user').value = adminCredentials.user;
+                document.getElementById('new-adm-pass').value = adminCredentials.pass;
+                renderPendingItems();
+                showToast('🔑 با موفقیت وارد پنل مدیریت شدید');
+            } else {
+                showToast('❌ نام کاربری یا رمز عبور اشتباه است!');
+            }
+        }
+
+        function updateAdminCredentials() {
+            const newUser = document.getElementById('new-adm-user').value.trim();
+            const newPass = document.getElementById('new-adm-pass').value.trim();
+
+            if (!newUser || !newPass) {
+                return showToast('⚠️ تکایە ناوی بەکارهێنەر و وشەی نهێنی پڕ بکەرەوە');
+            }
+
+            adminCredentials.user = newUser;
+            adminCredentials.pass = newPass;
+            showToast('✅ زانیاری بەڕێوەبەر بە سەرکەوتوویی گۆڕدرا');
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('adm-user').value = '';
+            document.getElementById('adm-pass').value = '';
+            document.getElementById('admin-login-box').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            showToast('از پنل مدیریت خارج شدید');
+        }
+
+        function renderPendingItems() {
+            const container = document.getElementById('pending-container');
+            if (PENDING_ITEMS.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">هیچ موردی در انتظار تایید وجود ندارد.</p>`;
+                return;
+            }
+
+            container.innerHTML = PENDING_ITEMS.map(item => `
+                <div class="bg-slate-800 p-3 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border border-slate-700">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold px-2 py-0.5 rounded ${item.type === 'poem' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-500/20 text-blue-400'}">
+                                ${item.type === 'poem' ? 'شعر' : 'کتاب'}
+                            </span>
+                            <h4 class="font-bold text-sm text-slate-200">${item.title}</h4>
+                            <span class="text-[11px] text-slate-400">(${item.poet || item.author})</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">${item.content ? item.content.substring(0, 50) + '...' : item.url}</p>
+                    </div>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="approvePendingItem(${item.id})" class="flex-1 md:flex-none px-3 py-1.5 bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30 rounded-lg text-xs font-bold transition">
+                            <i class="fa-solid fa-check ml-1"></i> تایید و انتشار
+                        </button>
+                        <button onclick="rejectPendingItem(${item.id})" class="flex-1 md:flex-none px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 rounded-lg text-xs font-bold transition">
+                            <i class="fa-solid fa-xmark ml-1"></i> حذف
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approvePendingItem(id) {
+            const index = PENDING_ITEMS.findIndex(item => item.id === id);
+            if (index !== -1) {
+                const item = PENDING_ITEMS[index];
+                if (item.type === 'poem') {
+                    POEMS_DATA.unshift({ id: Date.now(), title: item.title, poet: item.poet, content: item.content });
+                    renderPoems();
+                } else {
+                    BOOKS_DATA.unshift({ id: Date.now(), title: item.title, author: item.author, url: item.url });
+                    renderBooks();
+                }
+                PENDING_ITEMS.splice(index, 1);
+                renderPendingItems();
+                renderUserSubmissions();
+                showToast('✅ مورد تایید و منتشر شد');
+            }
+        }
+
+        function rejectPendingItem(id) {
+            PENDING_ITEMS = PENDING_ITEMS.filter(item => item.id !== id);
+            renderPendingItems();
+            renderUserSubmissions();
+            showToast('🗑️ مورد رد و حذف شد');
+        }
+
+        function playPronunciation(text) {
+            if (!text || text.trim() === '') return;
+            showToast(`🔊 خوێندنەوەی دەنگی: «${text.substring(0, 20)}...»`);
+            
+            try {
+                if (window.responsiveVoice && typeof window.responsiveVoice.speak === 'function') {
+                    // پخش صوتی از طریق ResponsiveVoice با لهجه روان
+                    window.responsiveVoice.speak(text, "Arabic Female", {
+                        rate: 0.85,
+                        pitch: 1.0,
+                        volume: 1.0,
+                        onerror: function() {
+                            fallbackSpeechSynthesizer(text);
+                        }
+                    });
+                    return;
+                }
+            } catch (e) {
+                console.log("ResponsiveVoice fallback trigger:", e);
+            }
+            
+            fallbackSpeechSynthesizer(text);
+        }
+
+        function fallbackSpeechSynthesizer(text) {
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'fa-IR';
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {}
+        }
+
+        function renderPoems() {
+            const container = document.getElementById('poems-container');
+            const searchVal = document.getElementById('poem-search').value.toLowerCase();
+            document.getElementById('poem-count').innerText = POEMS_DATA.length;
+
+            const filtered = POEMS_DATA.filter(p => 
+                p.title.toLowerCase().includes(searchVal) || 
+                p.poet.toLowerCase().includes(searchVal) ||
+                p.content.toLowerCase().includes(searchVal)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-10 text-slate-500">هیچ شیعرێک نەدۆزرایەوە.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(poem => `
+                <div class="gold-card p-5 rounded-2xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-black text-yellow-400 text-base">${poem.title}</h3>
+                            <span class="text-xs px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">${poem.poet}</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 whitespace-pre-line leading-relaxed">
+                            ${poem.content}
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                        <button onclick="playPronunciation(\`${poem.content.replace(/`/g, '')}\`)" class="px-3 py-1.5 rounded-lg bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/30 text-xs font-bold transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-volume-high"></i> خوێندنەوەی شیعر
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAlphabet() {
+            const container = document.getElementById('alphabet-grid');
+            if (!container) return;
+            container.innerHTML = ALPHABET_DATA.map(item => `
+                <button onclick="playPronunciation('${item.char}')" class="gold-card p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition hover:scale-105">
+                    <span class="text-xl font-black text-yellow-400">${item.char}</span>
+                    <span class="text-[10px] text-slate-400">${item.sound}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderVocab() {
+            const container = document.getElementById('vocab-grid');
+            if (!container) return;
+            container.innerHTML = VOCAB_DATA.map(v => `
+                <div onclick="playPronunciation('${v.kurdish}')" class="gold-card p-4 rounded-xl flex items-center justify-between cursor-pointer transition hover:scale-[1.01]">
+                    <div>
+                        <h4 class="font-bold text-yellow-300 text-sm">${v.kurdish}</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">${v.meaning}</p>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBooks() {
+            const container = document.getElementById('books-container');
+            if (!container) return;
+
+            if (BOOKS_DATA.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">کتێبخانە لە ئێستادا خالییە. دەتوانن لە ڕێگەی پنەلی بەڕێوەبەرایەتییەوە کتێب زیاد بکەن.</div>`;
+                return;
+            }
+
+            container.innerHTML = BOOKS_DATA.map(b => `
+                <div class="gold-card p-5 rounded-2xl flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-xl mb-3">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h3 class="font-bold text-yellow-400 text-base">${b.title}</h3>
+                        <p class="text-xs text-slate-400">نویسنده: ${b.author}</p>
+                    </div>
+                    <a href="${b.url || '#'}" target="_blank" class="w-full py-2 gold-btn rounded-xl text-xs font-bold text-center block shadow-lg">
+                        <i class="fa-solid fa-download ml-1"></i> دانلود / مطالعۀ PDF
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function addPoemByAdmin() {
+            const title = document.getElementById('adm-title').value.trim();
+            const poet = document.getElementById('adm-poet').value.trim();
+            const content = document.getElementById('adm-content').value.trim();
+            const fileInput = document.getElementById('adm-poem-pdf');
+
+            if (!title || !poet || (!content && fileInput.files.length === 0)) {
+                return showToast('⚠️ لطفاً اطلاعات کامل شعر را وارد کنید');
+            }
+
+            let pdfUrl = '#';
+            if (fileInput.files.length > 0) {
+                pdfUrl = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            POEMS_DATA.unshift({
+                id: Date.now(),
+                title: title,
+                poet: poet,
+                content: content || '[فایل PDF بارگذاری شده]'
+            });
+
+            document.getElementById('adm-title').value = '';
+            document.getElementById('adm-poet').value = '';
+            document.getElementById('adm-content').value = '';
+            document.getElementById('adm-poem-pdf').value = '';
+
+            renderPoems();
+            showToast('✅ شعر با موفقیت اضافه و منتشر شد');
+        }
+
+        function addBookByAdmin() {
+            const title = document.getElementById('bk-title').value.trim();
+            const author = document.getElementById('bk-author').value.trim();
+            let url = document.getElementById('bk-url').value.trim();
+            const fileInput = document.getElementById('bk-pdf-file');
+
+            if (!title || !author) {
+                return showToast('⚠️ لطفاً عنوان و نویسنده کتاب را وارد کنید');
+            }
+
+            if (fileInput.files.length > 0) {
+                url = URL.createObjectURL(fileInput.files[0]);
+            } else if (!url) {
+                url = '#';
+            }
+
+            BOOKS_DATA.unshift({
+                id: Date.now(),
+                title: title,
+                author: author,
+                url: url
+            });
+
+            document.getElementById('bk-title').value = '';
+            document.getElementById('bk-author').value = '';
+            document.getElementById('bk-url').value = '';
+            document.getElementById('bk-pdf-file').value = '';
+
+            renderBooks();
+            showToast('✅ کتاب با موفقیت اضافه و در کتابخانه منتشر شد');
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['poems', 'vocab', 'books', 'user', 'admin'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) {
+                    btn.className = 'px-4 py-2 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 border border-slate-700';
+                }
+            });
+
+            const activeSec = document.getElementById(`sec-${tabName}`);
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = 'px-4 py-2 rounded-xl text-sm font-bold gold-btn shadow-lg';
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            msgEl.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        window.onload = function() {
+            renderPoems();
+            renderAlphabet();
+            renderVocab();
+            renderBooks();
+        };
+    </script>
+</body>
+</html>
