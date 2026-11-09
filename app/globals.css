@@ -1,0 +1,610 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* KIAN brand */
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-bright: var(--gold-bright);
+  --color-purple: var(--purple);
+  --color-purple-soft: var(--purple-soft);
+  --color-purple-deep: var(--purple-deep);
+}
+
+/* ─── KIAN light theme (warm ivory + gold + violet) ─────────── */
+:root {
+  --radius: 0.75rem;
+  --gold: #b8860b;
+  --gold-soft: #8a6508;
+  --gold-bright: #d4af37;
+  --purple: #7c3aed;
+  --purple-soft: #a78bfa;
+  --purple-deep: #4c1d95;
+
+  --background: #f7f4ec;
+  --foreground: #201a10;
+  --card: #fffdf7;
+  --card-foreground: #201a10;
+  --popover: #fffdf7;
+  --popover-foreground: #201a10;
+  --primary: #b8860b;
+  --primary-foreground: #fffdf7;
+  --secondary: #efe9db;
+  --secondary-foreground: #201a10;
+  --muted: #efe9db;
+  --muted-foreground: #6d6350;
+  --accent: #f1e9f9;
+  --accent-foreground: #4c1d95;
+  --destructive: #b3261e;
+  --border: #e2dcc9;
+  --input: #e2dcc9;
+  --ring: #b8860b;
+  --chart-1: #b8860b;
+  --chart-2: #7c3aed;
+  --chart-3: #0f766e;
+  --chart-4: #d4af37;
+  --chart-5: #a78bfa;
+  --sidebar: #f1ecdf;
+  --sidebar-foreground: #201a10;
+  --sidebar-primary: #b8860b;
+  --sidebar-primary-foreground: #fffdf7;
+  --sidebar-accent: #e9e1cd;
+  --sidebar-accent-foreground: #201a10;
+  --sidebar-border: #e2dcc9;
+  --sidebar-ring: #b8860b;
+}
+
+/* ─── KIAN dark theme (premium black + gold + violet) ───────── */
+.dark {
+  --gold: #d4af37;
+  --gold-soft: #a8862a;
+  --gold-bright: #f0d47a;
+  --purple: #8b5cf6;
+  --purple-soft: #a78bfa;
+  --purple-deep: #3b1a6e;
+
+  --background: #07070c;
+  --foreground: #eceaf4;
+  --card: #0e0e17;
+  --card-foreground: #eceaf4;
+  --popover: #12121d;
+  --popover-foreground: #eceaf4;
+  --primary: #d4af37;
+  --primary-foreground: #07070c;
+  --secondary: #16161f;
+  --secondary-foreground: #eceaf4;
+  --muted: #16161f;
+  --muted-foreground: #9c97ad;
+  --accent: #1d1430;
+  --accent-foreground: #c4b5fd;
+  --destructive: #f87171;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #d4af37;
+  --chart-1: #d4af37;
+  --chart-2: #8b5cf6;
+  --chart-3: #2dd4bf;
+  --chart-4: #f0d47a;
+  --chart-5: #a78bfa;
+  --sidebar: #0a0a12;
+  --sidebar-foreground: #eceaf4;
+  --sidebar-primary: #d4af37;
+  --sidebar-primary-foreground: #07070c;
+  --sidebar-accent: #14121f;
+  --sidebar-accent-foreground: #eceaf4;
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --sidebar-ring: #d4af37;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Vazirmatn", var(--font-geist-sans), "Segoe UI", Tahoma, sans-serif;
+  }
+  /* code + preview always LTR & mono */
+  .ltr-mono {
+    direction: ltr;
+    font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+}
+
+/* ─── Scrollbars ────────────────────────────────────────────── */
+.kian-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--gold) 45%, transparent) transparent;
+}
+.kian-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.kian-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.kian-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--gold) 40%, transparent);
+  border-radius: 8px;
+}
+.kian-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--gold) 65%, transparent);
+}
+
+/* ─── Brand utilities ───────────────────────────────────────── */
+.kian-gradient-text {
+  background: linear-gradient(100deg, var(--gold-bright) 10%, var(--gold) 40%, var(--purple-soft) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.kian-glass {
+  background: color-mix(in oklab, var(--card) 78%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+}
+
+.kian-ring-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--gold) 35%, transparent),
+    0 0 24px color-mix(in oklab, var(--gold) 18%, transparent),
+    0 0 48px color-mix(in oklab, var(--purple) 12%, transparent);
+}
+
+/* ─── Animations ────────────────────────────────────────────── */
+@keyframes kian-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: kian-fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes kian-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 18px color-mix(in oklab, var(--gold) 30%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 34px color-mix(in oklab, var(--gold) 55%, transparent),
+      0 0 60px color-mix(in oklab, var(--purple) 30%, transparent);
+  }
+}
+.animate-glow-pulse {
+  animation: kian-glow-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes kian-typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--gold);
+  animation: kian-typing 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+  background: var(--purple);
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+  background: var(--gold);
+}
+
+@keyframes kian-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.kian-shimmer {
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    color-mix(in oklab, var(--gold) 25%, transparent) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: kian-shimmer 1.6s linear infinite;
+}
+
+@keyframes kian-spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: kian-spin-slow 8s linear infinite;
+}
+
+@keyframes kian-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.animate-pan {
+  background-size: 200% 200%;
+  animation: kian-pan 6s ease infinite;
+}
+
+/* KIAN logo diamond */
+.kian-logo {
+  background: conic-gradient(from 220deg, var(--gold-bright), var(--gold), var(--purple), var(--gold));
+}
+
+/* ─── Shimmering gradient text ("searching for the answer" state) ── */
+.kian-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0%,
+    var(--gold-bright) 25%,
+    var(--purple-soft) 50%,
+    var(--gold-bright) 75%,
+    var(--gold) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: kian-shimmer 2s linear infinite;
+}
+
+/* ─── Ambient aurora backdrop (two floating glow blobs) ─────────── */
+.kian-aurora::before,
+.kian-aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.14;
+}
+.kian-aurora::before {
+  width: 420px;
+  height: 420px;
+  top: -140px;
+  inset-inline-start: -120px;
+  background: var(--gold);
+  animation: kian-float 14s ease-in-out infinite;
+}
+.kian-aurora::after {
+  width: 480px;
+  height: 480px;
+  bottom: -180px;
+  inset-inline-end: -140px;
+  background: var(--purple);
+  animation: kian-float 18s ease-in-out infinite reverse;
+}
+@keyframes kian-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, 30px) scale(1.08);
+  }
+}
+
+/* ─── ─── UPGRADE PACK ─── ──────────────────────────────────── */
+
+/* gold selection */
+::selection {
+  background: color-mix(in oklab, var(--gold) 60%, transparent);
+  color: #17120a;
+}
+
+/* vignette overlay (boot splash + welcome) */
+.kian-vignette {
+  background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* subtle blueprint grid over the aurora */
+.kian-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--gold) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--purple) 6%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, black 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, black 25%, transparent 78%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* third, middle aurora blob */
+.kian-aurora-mid {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  top: 32%;
+  inset-inline-start: 42%;
+  border-radius: 9999px;
+  filter: blur(110px);
+  background: color-mix(in oklab, var(--purple) 55%, var(--gold));
+  opacity: 0.1;
+  animation: kian-float 22s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* animated gradient hairline under the header */
+.kian-header-beam {
+  position: absolute;
+  bottom: -1px;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 4%,
+    color-mix(in oklab, var(--gold) 75%, transparent) 32%,
+    color-mix(in oklab, var(--purple) 75%, transparent) 62%,
+    transparent 96%
+  );
+  background-size: 200% 100%;
+  animation: kian-shimmer 5s linear infinite;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* glowing title */
+.kian-title-glow {
+  text-shadow:
+    0 0 20px color-mix(in oklab, var(--gold) 38%, transparent),
+    0 0 46px color-mix(in oklab, var(--purple) 18%, transparent);
+}
+
+/* ── radar rings (thinking avatar) ── */
+@keyframes kian-radar {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+.kian-radar {
+  animation: kian-radar 1.6s ease-out infinite;
+}
+.kian-radar-late {
+  animation-delay: 0.55s;
+}
+
+/* ── scanning bar (thinking state) ── */
+.kian-scan {
+  position: relative;
+}
+.kian-scan::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: 55%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--purple), transparent);
+  animation: kian-scan-move 1.35s ease-in-out infinite;
+}
+@keyframes kian-scan-move {
+  0% {
+    inset-inline-start: -55%;
+  }
+  100% {
+    inset-inline-start: 100%;
+  }
+}
+
+/* ── streaming caret (live typing) ── */
+@keyframes kian-caret-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.12;
+  }
+}
+.kian-caret {
+  display: inline-block;
+  width: 9px;
+  height: 1.05em;
+  margin-inline-start: 4px;
+  vertical-align: text-bottom;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--gold-bright), var(--purple));
+  box-shadow: 0 0 12px color-mix(in oklab, var(--gold) 65%, transparent);
+  animation: kian-caret-blink 0.85s ease-in-out infinite;
+}
+
+/* ── live streaming bubble glow ── */
+.kian-bubble-live {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--gold) 20%, transparent),
+    0 0 26px color-mix(in oklab, var(--gold) 13%, transparent),
+    0 0 46px color-mix(in oklab, var(--purple) 10%, transparent);
+}
+
+/* ── user bubble: soft gold gradient + glow ── */
+.kian-bubble-user {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--gold) 16%, transparent),
+    color-mix(in oklab, var(--purple) 13%, transparent)
+  );
+  box-shadow: 0 2px 16px color-mix(in oklab, var(--gold) 12%, transparent);
+  transition: box-shadow 0.3s ease;
+}
+.kian-bubble-user:hover {
+  box-shadow: 0 4px 22px color-mix(in oklab, var(--gold) 22%, transparent);
+}
+
+/* ── composer: rotating neon border on focus ── */
+@property --kian-beam {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes kian-beam-spin {
+  to {
+    --kian-beam: 360deg;
+  }
+}
+.kian-composer {
+  position: relative;
+  border-radius: 1rem;
+}
+.kian-composer::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--kian-beam),
+    transparent 0deg,
+    transparent 250deg,
+    var(--gold) 300deg,
+    var(--purple) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: kian-beam-spin 3.4s linear infinite;
+  pointer-events: none;
+}
+.kian-composer:focus-within::before {
+  opacity: 1;
+}
+
+/* ── shine sweep on gradient buttons ── */
+.kian-send {
+  position: relative;
+  overflow: hidden;
+}
+.kian-send::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.4) 50%, transparent 68%);
+  transform: translateX(-130%);
+  transition: transform 0.65s ease;
+  pointer-events: none;
+}
+.kian-send:hover::after {
+  transform: translateX(130%);
+}
+
+/* ── orbiting dots (welcome hero) ── */
+@keyframes kian-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.kian-orbit {
+  border-radius: 9999px;
+  animation: kian-orbit-spin 7s linear infinite;
+}
+.kian-orbit-rev {
+  animation-direction: reverse;
+  animation-duration: 11s;
+}
+.kian-orbit-dot {
+  position: absolute;
+  top: -4.5px;
+  left: 50%;
+  margin-left: -4.5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background: var(--gold-bright);
+  box-shadow: 0 0 14px var(--gold);
+}
+.kian-orbit-dot-purple {
+  background: var(--purple-soft);
+  box-shadow: 0 0 14px var(--purple);
+}
+
+/* ── smooth theme cross-fade ── */
+body,
+aside,
+header {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}

@@ -1,0 +1,28 @@
+# ─── KIAN AI — one-command deployment ────────────────────────────
+# 1) cp .env.example .env   and fill in your values
+# 2) docker compose up -d --build
+# 3) open http://YOUR-SERVER-IP:3000
+#
+# Secrets live in .env (same directory) — never committed to git.
+
+services:
+  kian-ai:
+    build: .
+    container_name: kian-ai
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: file:/app/db/custom.db
+      # AI provider — any OpenAI-compatible endpoint (leave empty inside the
+      # original sandbox, where the built-in server-side connection is used)
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-gpt-4o-mini}
+      # Access lock — set a strong password before going public!
+      KIAN_ACCESS_PASSWORD: ${KIAN_ACCESS_PASSWORD:-}
+    volumes:
+      - kian-db:/app/db
+
+volumes:
+  kian-db:
